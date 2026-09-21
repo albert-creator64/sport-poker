@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Блайнд-таймер</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="timer.css">
+</head>
+<body>
+<div class="timer-shell">
+
+  <div id="board" class="board">
+    <div class="board-head">
+      <div class="bh-title" id="bhTitle">БЛАЙНД-ТАЙМЕР</div>
+      <div class="bh-ctrl" onclick="goControl()">⚙ Пульт</div>
+    </div>
+
+    <div class="bb-big">
+      <span class="bb-label">БОЛЬШОЙ БЛАЙНД</span>
+      <span class="bb-val" id="bbVal">—</span>
+    </div>
+
+    <div class="mid-row">
+      <div class="blk">
+        <div class="blk-label">СБ / ББ</div>
+        <div class="blk-val" id="blindsVal">—</div>
+      </div>
+      <div class="blk">
+        <div class="blk-label">АНТЕ</div>
+        <div class="blk-val" id="anteVal">—</div>
+      </div>
+      <div class="blk">
+        <div class="blk-label">УРОВЕНЬ</div>
+        <div class="blk-val" id="lvlVal">—</div>
+      </div>
+    </div>
+
+    <div class="progress" id="progWrap">
+      <div class="progress-fill" id="progFill"></div>
+      <div class="progress-text" id="progText">—</div>
+    </div>
+
+    <div class="next-row">
+      <div class="next-label">СЛЕДУЮЩИЙ</div>
+      <div class="next-val" id="nextVal">—</div>
+    </div>
+
+    <div class="stats-row">
+      <div class="st">
+        <div class="st-v" id="stPlayers">—</div>
+        <div class="st-l">ИГРОКОВ</div>
+      </div>
+      <div class="st">
+        <div class="st-v" id="stRe">—</div>
+        <div class="st-l">РЕ-ЭНТРИ</div>
+      </div>
+      <div class="st">
+        <div class="st-v" id="stAvg">—</div>
+        <div class="st-l">СРЕДНИЙ СТЕК</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="ctrl" class="ctrl" style="display:none">
+    <div class="hdr">
+      <div class="crest">⏱</div>
+      <div class="hdr-info">
+        <div class="hdr-name">Пульт таймера</div>
+        <div class="hdr-sub">управление табло</div>
+      </div>
+      <button class="mini-link" onclick="goBoard()">Табло ↗</button>
+    </div>
+
+    <div class="content">
+      <div class="t-tile">
+        <div class="ctrl-time" id="ctrlTime">—</div>
+        <div class="ctrl-level" id="ctrlLevel">—</div>
+        <div class="c-actions">
+          <button class="btn btn-primary" onclick="ctrlToggle()" id="btnToggle">Старт</button>
+          <button class="btn btn-ghost" onclick="ctrlReset()">Сброс</button>
+        </div>
+        <div class="c-actions">
+          <button class="btn btn-ghost" onclick="ctrlPrev()">◀ Уровень</button>
+          <button class="btn btn-ghost" onclick="ctrlNext()">Уровень ▶</button>
+        </div>
+      </div>
+
+      <div class="sec-title">Счётчики табло</div>
+      <div class="t-tile">
+        <div class="c-actions">
+          <button class="btn btn-ghost" onclick="ctrlCount('players',-1)">− Игроков</button>
+          <button class="btn btn-ghost" onclick="ctrlCount('players',1)">+ Игроков</button>
+          <button class="btn btn-ghost" onclick="ctrlCount('reentries',1)">+ Ре-энтри</button>
+          <button class="btn btn-ghost" onclick="ctrlCount('avgStack',100)">Стек +100</button>
+          <button class="btn btn-ghost" onclick="ctrlCount('avgStack',-100)">Стек −100</button>
+        </div>
+      </div>
+
+      <div class="sec-title">Редактирование структуры</div>
+      <div class="t-tile">
+        <div id="schedEditor"></div>
+        <div class="tile-cta"><button class="btn btn-ghost" onclick="addLevel()">+ Добавить уровень</button></div>
+        <div class="tile-cta"><button class="btn btn-primary" onclick="saveStructure()">Сохранить структуру</button></div>
+        <div class="sec-title" style="margin-top:14px">Действия</div>
+        <div class="tile-cta" style="margin-top:0"><button class="btn btn-ghost" onclick="setTitle()">Название игры</button></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script src="db.js"></script>
+<script src="timer.js"></script>
+</body>
+</html>
