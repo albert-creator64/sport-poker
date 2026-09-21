@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Sport Poker — админка</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div class="app">
+
+  <div id="loginGate">
+    <div class="hdr">
+      <div class="crest">🛡</div>
+      <div class="hdr-info">
+        <div class="hdr-name">Админка</div>
+        <div class="hdr-sub">панель управления клубом</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="t-tile">
+        <div class="sec-title" style="margin:0 0 12px">Вход</div>
+        <div class="f-cell"><label>Пин-код</label><input type="password" id="gatePin" placeholder="••••" inputmode="numeric"></div>
+        <div class="tile-cta"><button class="btn btn-primary" onclick="gateLogin()">Войти</button></div>
+      </div>
+      <div class="t-tile">
+        <div class="mini-link-row"><span class="row-title">Игроки:</span> <a class="mini-link" href="./">Перейти к записи →</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="adminBody" style="display:none">
+
+    <div class="tab-view" id="view-cash">
+      <div class="hdr">
+        <div class="crest">💰</div>
+        <div class="hdr-info">
+          <div class="hdr-name">Касса и входы</div>
+          <div class="hdr-sub" id="cashSub">выберите турнир</div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="sec-title">Турнир на табло</div>
+        <div id="cashSelect"></div>
+        <div id="cashPanel"></div>
+      </div>
+    </div>
+
+    <div class="tab-view" id="view-tourns" style="display:none">
+      <div class="hdr">
+        <div class="crest">🗓</div>
+        <div class="hdr-info">
+          <div class="hdr-name">Турниры</div>
+          <div class="hdr-sub">создание и редактирование</div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="t-tile">
+          <div class="admin-sep" style="margin-top:0">Новый турнир</div>
+          <div class="f-cell"><label>Название</label><input type="text" id="nName" placeholder="Турнир 21.09"></div>
+          <div class="f-row">
+            <div class="f-cell"><label>Дата</label><input type="date" id="nDate"></div>
+            <div class="f-cell"><label>Время</label><input type="time" id="nTime" value="19:40"></div>
+          </div>
+          <div class="f-row">
+            <div class="f-cell"><label>Бай-ин, ₽</label><input type="number" id="nCost" placeholder="500"></div>
+            <div class="f-cell"><label>Лимит игроков</label><input type="number" id="nLimit" placeholder="нет"></div>
+          </div>
+          <div class="f-row">
+            <div class="f-cell"><label>Стартовый стек</label><input type="number" id="nStart" placeholder="20000"></div>
+            <div class="f-cell"><label>Уровень, мин</label><input type="number" id="nMin" placeholder="10"></div>
+          </div>
+          <div class="f-cell"><label>Блайнды (SB/BB [анте], через →)</label><input type="text" id="nBlinds" placeholder="100/200 → 200/400 → 300/600 75"></div>
+          <div class="f-cell" style="margin-top:10px"><label>Примечание</label><input type="text" id="nNote" placeholder="Структура, поздний вход и т.п."></div>
+          <div class="tile-cta"><button class="btn btn-primary" onclick="addTourn()">Создать турнир</button></div>
+        </div>
+        <div class="sec-title">Все турниры</div>
+        <div id="tournList"></div>
+      </div>
+    </div>
+
+    <div class="tab-view" id="view-players" style="display:none">
+      <div class="hdr">
+        <div class="crest">👥</div>
+        <div class="hdr-info">
+          <div class="hdr-name">Игроки</div>
+          <div class="hdr-sub" id="plSub">база участников</div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="t-tile">
+          <div class="f-row">
+            <div class="f-cell"><label>Имя</label><input type="text" id="pName" placeholder="Иван"></div>
+            <div class="f-cell"><label>Телефон</label><input type="tel" id="pPhone" placeholder="+7 (900) 000-00-00"></div>
+          </div>
+          <div class="tile-cta"><button class="btn btn-primary" onclick="addPlayerMan()">Добавить игрока</button></div>
+        </div>
+        <div class="sec-title">База игроков</div>
+        <div id="playersBase"></div>
+      </div>
+    </div>
+
+    <div class="tab-view" id="view-anal" style="display:none">
+      <div class="hdr">
+        <div class="crest">📈</div>
+        <div class="hdr-info">
+          <div class="hdr-name">Аналитика</div>
+          <div class="hdr-sub">клуба</div>
+        </div>
+      </div>
+      <div class="content">
+        <div id="analBody"></div>
+      </div>
+    </div>
+
+    <nav class="tabbar" id="tabbar">
+      <button class="on" data-tab="0" onclick="goTab(0)"><span class="ic">💰</span>Касса</button>
+      <button data-tab="1" onclick="goTab(1)"><span class="ic">🗓</span>Турниры</button>
+      <button data-tab="2" onclick="goTab(2)"><span class="ic">👥</span>Игроки</button>
+      <button data-tab="3" onclick="goTab(3)"><span class="ic">📈</span>Аналитика</button>
+    </nav>
+
+  </div>
+
+</div>
+<script src="db.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
