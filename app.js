@@ -13,7 +13,8 @@ let DB=null,DBsha=null,saving=false,unlocked=false;
 const TABS=[
   {btn:0,id:'view-sign'},
   {btn:1,id:'view-players'},
-  {btn:2,id:'view-info'}
+  {btn:2,id:'view-rating'},
+  {btn:3,id:'view-info'}
 ];
 
 function hdr(){return{Authorization:'token '+CFG.tokenB+CFG.tokenA,'Accept':'application/vnd.github+json'};}
@@ -25,6 +26,7 @@ function goTab(i){
   });
   if(i===1)renderPlayers();
   if(i===0)updateHero();
+  if(i===2){renderRating();renderTournaments();}
   requestAnimationFrame(()=>window.scrollTo(0,0));
 }
 
@@ -42,11 +44,12 @@ async function loadDB(){
   if(!DB)DB=emptyDB();
   if(!DB.game)DB.game={};
   if(!Array.isArray(DB.players))DB.players=[];
+  if(!Array.isArray(DB.tournaments))DB.tournaments=[];
   return DB;
 }
 
 function emptyDB(){
-  return {game:{title:'Спорт покер',open:true,date:'',place:'',info:'Спортивная игра по турнирным правилам. Время и место уточняются в клубе.',contact:''},players:[]};
+  return {game:{title:'Спорт покер',open:true,date:'',place:'',info:'Спортивная игра по турнирным правилам. Время и место уточняются в клубе.',contact:''},players:[],tournaments:[]};
 }
 
 async function saveDB(){
@@ -135,6 +138,11 @@ function updateHero(){
   }
 }
 
+function playerName(id){
+  const p=(DB.players||[]).find(x=>x.id===id);
+  return p?p.name:'—';
+}
+
 async function renderPlayers(){
   const list=document.getElementById('playersList');
   const count=document.getElementById('plCount');
@@ -174,6 +182,145 @@ function unlockManage(){
   if(pin!==CFG.pin){document.getElementById('inPin').value='';return alert('Неверный пин-код');}
   unlocked=true;
   document.getElementById('manageBox').style.display='block';
+  document.getElementById('inPin').value='';
+  rebuildSelects();
+}
+
+function rebuildSelects(){
+  ['inP1','inP2','inP3'].forEach(id=>{
+    const s=document.getElementById(id);
+    const cur=s.value;
+    s.innerHTML='<option value="">— выберите —</option>'+(DB.players||[]).map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
+    if(cur)s.value=cur;
+  });
+}
+
+async function addTournament(){
+  const name=document.getElementById('inTName').value.trim();
+  const p1=document.getElementById('inP1').value;
+  const p2=document.getElementById('inP2').value;
+  const p3=document.getElementById('inP3').value;
+  if(!name)return alert('Укажите название турнира');
+  if(!p1)return alert('Выберите 1-е место');
+  const places=[];
+  if(p1)places.push({playerId:p1,place:1});
+  if(p2)places.push({playerId:p2,place:2});
+  if(p3)places.push({playerId:p3,place:3});
+  const seen=[];
+  for(const pl of places){
+    if(seen.includes(pl.playerId))return alert('Один игрок не может занимать два места');
+    seen.push(pl.playerId);
+  }
+  const participants=(DB.players||[]).length;
+  if(participants<1)return alert('Сначала добавьте участников');
+  try{
+    await loadDB();
+    // места могли измениться после перезагрузки
+    if(!DB.game)DB.game={};
+    if(!DB.players)DB.players=[];
+    if(!DB.tournaments)DB.tournaments=[];
+    const part2=DB.players.length;
+    DB.tournaments.push({
+      id:Date.now().toString(36),
+      name:name,
+      date:new Date().toISOString().slice(0,10),
+      participants:part2,
+      places:places
+    });
+    await saveDB();
+    document.getElementById('inTName').value='';
+    document.getElementById('inP1').value='';
+    document.getElementById('inP2').value='';
+    document.getElementById('inP3').value='';
+    renderTournaments();
+    renderRating();
+    if(document.getElementById('view-rating').style.display==='block'){renderRating();renderTournaments();}
+  }catch(e){
+    alert('Ошибка. Попробуйте ещё раз.');
+  }
+}
+
+async function deleteTournament(id){
+  if(!unlocked)return;
+  if(!confirm('Удалить турнир и его результат из рейтинга?'))return;
+  try{
+    await loadDB();
+    DB.tournaments=DB.tournaments.filter(t=>t.id!==id);
+    await saveDB();
+    renderTournaments();
+    renderRating();
+  }catch(e){alert('Ошибка. Попробуйте ещё раз.');}
+}
+
+function pts(place,participants){
+  return Math.round((participants-place+1)/Math.max(1,participants)*100);
+}
+
+function ratingRows(){
+  const rows={};
+  (DB.players||[]).forEach(p=>{rows[p.id]={name:p.name,pts:0,games:0,wins:0,top3:0};});
+  (DB.tournaments||[]).forEach(t=>{
+    const n=t.participants||0;
+    (t.places||[]).forEach(pl=>{
+      const r=rows[pl.playerId];
+      if(!r)return;
+      const p=pts(pl.place,n);
+      r.pts+=p;r.games++;r.wins+=pl.place===1?1:0;r.top3+=pl.place<=3?1:0;
+    });
+  });
+  return Object.values(rows).filter(r=>r.games>0).sort((a,b)=>b.pts-a.pts||b.wins-a.wins||a.name.localeCompare(b.name));
+}
+
+async function renderRating(){
+  const box=document.getElementById('ratingTable');
+  try{await loadDB();}catch(e){}
+  const rows=ratingRows();
+  if(rows.length===0){
+    box.innerHTML='<div class="empty"><div class="empty-ic">🏆</div><div class="empty-t">Рейтинг пока пуст</div><div class="empty-s">Добавьте результаты турниров в разделе «Инфо»</div></div>';
+    return;
+  }
+  box.innerHTML=rows.map((r,i)=>{
+    const top=i===0?'top1':i===1?'top2':i===2?'top3':'';
+    return `<div class="rating-row ${top}">
+      <div class="rat-rank">${i+1}</div>
+      <div class="rat-main">
+        <div class="rat-name">${esc(r.name)}</div>
+        <div class="rat-sub">игр: ${r.games} · побед: ${r.wins} · топ-3: ${r.top3}</div>
+      </div>
+      <div class="rat-pts">${r.pts}</div>
+    </div>`;
+  }).join('');
+}
+
+async function renderTournaments(){
+  const box=document.getElementById('tournamentList');
+  try{await loadDB();}catch(e){}
+  const list=(DB.tournaments||[]).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||'')||(b.id||'').localeCompare(a.id||''));
+  if(list.length===0){
+    box.innerHTML='<div class="tourn-row"><div class="tourn-empty">Турниров пока нет</div></div>';
+    return;
+  }
+  const medals=['','🥇','🥈','🥉'];
+  box.innerHTML=list.map(t=>{
+    const rows=(t.places||[]).slice().sort((a,b)=>a.place-b.place).map(pl=>{
+      const points=pts(pl.place,t.participants||0);
+      const del=unlocked?`<button class="tourn-del" onclick="deleteTournament('${t.id}')">✕</button>`:'';
+      return `<div class="tourn-place">
+        <span class="tp-pos">${pl.place<=3?medals[pl.place]:pl.place}</span>
+        <span class="tp-name">${esc(playerName(pl.playerId))}</span>
+        <span class="tp-pts">${points}</span>
+      </div>`;
+    }).join('');
+    return `<div class="tourn-row">
+      <div class="tourn-head">
+        <span class="tourn-name">${esc(t.name)}</span>
+        <span class="tourn-parts">${t.participants} уч.</span>
+        ${unlocked?`<button class="tourn-del" onclick="deleteTournament('${t.id}')">✕</button>`:''}
+      </div>
+      ${rows}
+    </div>`;
+  }).join('');
+  if(unlocked)rebuildSelects();
 }
 
 async function setOpen(v){
@@ -221,5 +368,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   loadDB().then(()=>{
     updateHero();
     renderPlayers();
+    renderRating();
+    renderTournaments();
+    if(DB.players.length>=3)rebuildSelects();
   }).catch(()=>{});
 });
