@@ -1,12 +1,32 @@
 {
   "game": {
-    "title": "Спорт покер",
+    "title": "Sport Poker",
     "open": true,
     "date": "",
     "place": "",
-    "info": "Спортивная игра по турнирным правилам. Время и место уточняются в клубе.",
+    "info": "Спортивная игра по турнирным правилам. Запишитесь на турнир и приходите играть.",
     "contact": ""
   },
   "players": [],
-  "tournaments": []
+  "tournaments": [],
+  "timer": {
+    "levels": [
+      {"sb": 100, "bb": 200, "ante": 0, "min": 10},
+      {"sb": 200, "bb": 400, "ante": 0, "min": 10},
+      {"sb": 300, "bb": 600, "ante": 0, "min": 10},
+      {"sb": 400, "bb": 800, "ante": 100, "min": 10},
+      {"sb": 600, "bb": 1200, "ante": 200, "min": 10},
+      {"sb": 800, "bb": 1600, "ante": 200, "min": 10},
+      {"sb": 1000, "bb": 2000, "ante": 300, "min": 10},
+      {"sb": 1500, "bb": 3000, "ante": 400, "min": 10}
+    ],
+    "levelIdx": 0,
+    "running": false,
+    "levelStartTs": 0,
+    "durMs": 600000,
+    "players": 0,
+    "reentries": 0,
+    "avgStack": 0,
+    "title": ""
+  }
 }
