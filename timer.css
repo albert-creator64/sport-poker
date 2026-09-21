@@ -1,0 +1,43 @@
+/* timer.css — табло и пульт */
+
+.timer-shell{max-width:780px;min-height:100dvh;margin:0 auto;background:radial-gradient(120% 55% at 50% -8%,rgba(var(--accent-rgb),.12),transparent 55%),var(--bg);padding-bottom:env(safe-area-inset-bottom)}
+
+.board{padding:18px;display:flex;flex-direction:column;gap:16px;min-height:100dvh}
+.board-head{display:flex;align-items:center;justify-content:space-between}
+.bh-title{font-size:16px;font-weight:800;letter-spacing:3px;color:var(--accent-soft);text-transform:uppercase}
+.bh-ctrl{background:none;border:none;color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;padding:8px}
+
+.bb-big{display:flex;flex-direction:column;align-items:center;gap:8px;margin:auto 0;text-align:center}
+.bb-label{font-size:12px;letter-spacing:3px;color:var(--muted);font-weight:700;text-transform:uppercase}
+.bb-val{font-size:clamp(64px,22vw,150px);font-weight:900;font-style:italic;line-height:1;color:var(--text);text-shadow:0 0 60px rgba(var(--accent-rgb),.35),0 10px 40px #000;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+
+.mid-row{display:flex;gap:10px;margin-top:auto}
+.blk{flex:1;background:linear-gradient(165deg,var(--surface),var(--bg));border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:14px 12px;text-align:center}
+.blk-label{font-size:9.5px;letter-spacing:1.5px;color:var(--muted-2);font-weight:700;text-transform:uppercase}
+.blk-val{font-size:22px;font-weight:800;margin-top:5px;color:var(--text);font-variant-numeric:tabular-nums}
+
+.progress{position:relative;height:44px;border-radius:22px;background:#ffffff0d;border:1px solid rgba(255,255,255,.06);overflow:hidden;box-shadow:inset 0 1px #ffffff0a}
+.progress-fill{position:absolute;left:0;top:0;bottom:0;border-radius:22px;transition:width .25s linear}
+.progress-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--text);text-shadow:0 1px 6px #000}
+
+.next-row{display:flex;align-items:center;gap:12px;background:linear-gradient(165deg,var(--surface),var(--bg));border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:12px 16px}
+.next-label{font-size:10px;letter-spacing:2px;color:var(--muted-2);font-weight:700;text-transform:uppercase}
+.next-val{font-size:22px;font-weight:800;color:var(--accent-soft);font-variant-numeric:tabular-nums;margin-left:auto}
+
+.stats-row{display:flex;gap:10px}
+.st{flex:1;background:linear-gradient(165deg,var(--surface),var(--bg));border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:12px 10px;text-align:center}
+.st-v{font-size:20px;font-weight:800;color:var(--text);font-variant-numeric:tabular-nums;font-style:italic}
+.st-l{font-size:9px;letter-spacing:1.2px;color:var(--muted-2);margin-top:4px;font-weight:700;text-transform:uppercase}
+
+/* пульт */
+.ctrl .ctrl-time{font-size:clamp(48px,16vw,80px);font-weight:900;font-style:italic;text-align:center;line-height:1;color:var(--text);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.ctrl .ctrl-level{font-size:14px;color:var(--muted);text-align:center;margin-top:8px;font-variant-numeric:tabular-nums}
+
+.sched-head,.sched-row{display:grid;grid-template-columns:28px 1fr 1fr 1fr 1fr 30px;gap:6px;align-items:center}
+.sched-head{font-size:9px;color:var(--muted-2);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.sched-row{margin-bottom:6px}
+.sched-row input{width:100%;min-width:0;padding:9px 6px;border-radius:9px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-size:13px;font-weight:600;text-align:center;outline:none}
+.sched-row input:focus{border-color:var(--accent)}
+.sched-idx{font-weight:800;color:var(--muted-2);text-align:center}
+.mini-del{background:none;border:none;color:var(--muted-2);font-size:16px;cursor:pointer;padding:4px;width:30px;height:30px}
+.mini-del:hover{color:var(--red)}
