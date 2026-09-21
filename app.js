@@ -103,15 +103,31 @@ function renderFixture(){
   }).join('');
 }
 
-async function reg(id){
-  if(!mePhone){alert('Сначала войдите в профиль по номеру телефона');goTab(2);return;}
+async function reg(id,asWait){
   const t=(DB.tournaments||[]).find(x=>x.id===id);
   if(!t||t.completed||t.open===false)return alert('Запись на этот турнир закрыта');
-  const p=findPlayerByPhone(mePhone);
-  if(!p)return alert('Профиль не найден. Проверьте номер в профиле.');
-  const limit=t.limit&&t.limit>0?t.limit:null;
-  if(limit&&tRegCount(t)>=limit)return waitreg(id);
+  if(mePhone){
+    const p=findPlayerByPhone(mePhone);
+    if(p){
+      const limit=t.limit&&t.limit>0?t.limit:null;
+      if(limit&&tRegCount(t)>=limit&&!asWait){addToQueue(t,p,true);return;}
+      addToQueue(t,p,false);
+      return;
+    }
+  }
+  openRegModal(id,asWait);
+}
+
+async function addToQueue(t,p,asWait){
   if(!t.queue)t.queue=[];if(!t.wait)t.wait=[];
+  if(asWait){
+    if(t.wait.includes(p.id))return renderFixture();
+    t.wait.push(p.id);
+    t.queue=(t.queue||[]).filter(x=>x!==p.id);
+    await saveDB();
+    renderFixture();
+    return alert('Вы в списке ожидания. Освободится место — вас запишут.');
+  }
   if(t.queue.includes(p.id))return renderFixture();
   t.queue.push(p.id);
   t.wait=(t.wait||[]).filter(x=>x!==p.id);
@@ -120,17 +136,54 @@ async function reg(id){
   alert('Вы записаны на турнир!');
 }
 
-async function waitreg(id){
-  if(!mePhone){alert('Сначала войдите в профиль');goTab(2);return;}
+function openRegModal(id,asWait){
   const t=(DB.tournaments||[]).find(x=>x.id===id);
-  const p=findPlayerByPhone(mePhone);
-  if(!t||!p)return;
-  if(!t.wait)t.wait=[];
-  if(t.wait.includes(p.id))return renderFixture();
-  t.wait.push(p.id);
-  await saveDB();
-  renderFixture();
-  alert('Вы в списке ожидания. Освободится место — вас запишут.');
+  const div=document.createElement('div');
+  div.className='modal';
+  div.innerHTML=`<div class="modal-box">
+    <div class="modal-close" onclick="closeModal(this)">✕</div>
+    <div class="modal-title">${asWait?'Лист ожидания':'Запись на турнир'} · ${esc(t?t.name:'')}</div>
+    <div class="f-cell"><label>Ваше имя</label><input type="text" id="rName" placeholder="Иван" maxlength="40"></div>
+    <div class="f-cell" style="margin-top:12px"><label>Номер телефона</label><input type="tel" id="rPhone" placeholder="+7 (900) 000-00-00" inputmode="tel"></div>
+    <div id="rMsg"></div>
+    <div class="tile-cta"><button class="btn btn-primary" onclick="submitReg('${id}',${asWait})">Записаться</button></div>
+    <div class="hint-note" style="margin-top:12px">Если вы уже играли у нас — введите тот же телефон, он привяжет к вашему профилю и истории.</div>
+  </div>`;
+  document.body.appendChild(div);
+  setTimeout(()=>{const el=document.getElementById('rName');if(el)el.focus();},50);
+}
+
+function existsSelf(){
+  return !!(mePhone&&findPlayerByPhone(mePhone));
+}
+
+function closeModal(btn){
+  const m=btn.closest('.modal');if(m)m.remove();
+}
+
+async function submitReg(id,asWait){
+  const name=document.getElementById('rName').value.trim();
+  const phone=normPhone(document.getElementById('rPhone').value);
+  const msgEl=document.getElementById('rMsg');
+  msgEl.className='';msgEl.textContent='';
+  if(name.length<2){msgEl.className='err';msgEl.textContent='Укажите имя (минимум 2 буквы)';return;}
+  if(!/^7\d{10}$/.test(phone)){msgEl.className='err';msgEl.textContent='Укажите корректный телефон: начинается с +7';return;}
+  const t=(DB.tournaments||[]).find(x=>x.id===id);
+  if(!t||t.completed||t.open===false){msgEl.className='err';msgEl.textContent='Запись закрыта';return;}
+  let p=findPlayerByPhone(phone);
+  const existed=!!p;
+  if(!p){
+    p={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),name:name,phone:phone,t:new Date().toISOString()};
+    DB.players.push(p);
+  }
+  // фиксируем профиль
+  mePhone=phone;
+  localStorage.setItem('sp_me',phone);
+  addToQueue(t,p,asWait).then(()=>{closeModal(document.querySelector('.modal-box .modal-close'));});
+}
+
+async function waitreg(id){
+  reg(id,true);
 }
 
 async function unreg(id){
