@@ -1,96 +1,7 @@
 {
-    "game":  {
-                 "title":  "Sport Poker",
-                 "open":  true,
-                 "date":  "",
-                 "place":  "",
-                 "info":  "Спортивная игра по турнирным правилам. Запишитесь на турнир и приходите играть.",
-                 "contact":  ""
-             },
     "players":  [
-                    {
-                        "id":  "P1",
-                        "name":  "Иван",
-                        "phone":  "79990000001",
-                        "t":  "2026-09-21T13:32:30.500Z"
-                    },
-                    {
-                        "id":  "P2",
-                        "name":  "Петр",
-                        "phone":  "79990000002",
-                        "t":  "2026-09-21T13:32:30.500Z"
-                    },
-                    {
-                        "id":  "P3",
-                        "name":  "Сидор",
-                        "phone":  "79990000003",
-                        "t":  "2026-09-21T13:32:30.500Z"
-                    }
-                ],
-    "tournaments":  [
-                        {
-                            "id":  "T1",
-                            "name":  "Тестовый турнир",
-                            "date":  "2026-09-21",
-                            "time":  "19:40",
-                            "cost":  500,
-                            "limit":  8,
-                            "startStack":  20000,
-                            "levelMin":  10,
-                            "blinds":  [
-                                           {
-                                               "sb":  100,
-                                               "bb":  200,
-                                               "ante":  0
-                                           },
-                                           {
-                                               "sb":  200,
-                                               "bb":  400,
-                                               "ante":  0
-                                           }
-                                       ],
-                            "note":  "",
-                            "open":  true,
-                            "queue":  [
-                                          "P1",
-                                          "P2",
-                                          "P3"
-                                      ],
-                            "wait":  [
 
-                                     ],
-                            "events":  [
-                                           {
-                                               "playerId":  "P1",
-                                               "type":  "entry",
-                                               "paid":  true,
-                                               "ts":  "2026-09-21T13:32:30.500Z"
-                                           },
-                                           {
-                                               "playerId":  "P2",
-                                               "type":  "entry",
-                                               "paid":  false,
-                                               "ts":  "2026-09-21T13:32:30.500Z"
-                                           }
-                                       ],
-                            "results":  [
-                                            {
-                                                "playerId":  "P1",
-                                                "place":  1
-                                            },
-                                            {
-                                                "playerId":  "P2",
-                                                "place":  2
-                                            },
-                                            {
-                                                "playerId":  "P3",
-                                                "place":  3
-                                            }
-                                        ],
-                            "completed":  true,
-                            "totalPlayers":  3
-                        }
-                    ],
+                ],
     "timer":  {
                   "levels":  [
                                  {
@@ -142,13 +53,24 @@
                                      "min":  10
                                  }
                              ],
-                  "levelIdx":  0,
+                  "durMs":  600000,
                   "running":  false,
                   "levelStartTs":  0,
-                  "durMs":  600000,
                   "players":  0,
                   "reentries":  0,
-                  "avgStack":  0,
-                  "title":  ""
-              }
+                  "title":  "",
+                  "levelIdx":  0,
+                  "avgStack":  0
+              },
+    "game":  {
+                 "open":  true,
+                 "contact":  "",
+                 "info":  "Спортивная игра по турнирным правилам. Запишитесь на турнир и приходите играть.",
+                 "date":  "",
+                 "title":  "Sport Poker",
+                 "place":  ""
+             },
+    "tournaments":  [
+
+                    ]
 }
