@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Sport Poker — запись на игру</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app">
+
+  <div class="tab-view" id="view-sign">
+    <div class="hdr">
+      <div class="crest">♠</div>
+      <div class="hdr-info">
+        <div class="hdr-name">Sport Poker</div>
+        <div class="hdr-sub">клуб спортивного покера</div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="feat-tile">
+        <div class="chart"></div>
+        <div class="ft-kicker">ЗАПИСЬ НА ИГРУ</div>
+        <div class="ft-name" id="gameTitle">Спорт покер</div>
+        <div class="ft-stats">
+          <div class="ft-stat"><div class="ft-v" id="ftCount">0</div><div class="ft-l">участников</div></div>
+          <div class="ft-stat"><div class="ft-v acc" id="ftStatus">—</div><div class="ft-l">статус</div></div>
+        </div>
+      </div>
+
+      <div class="sec-title">Форма записи</div>
+
+      <div class="t-tile">
+        <div id="signForm">
+          <div class="f-cell"><label>Ваше имя</label><input type="text" id="inName" placeholder="Иван" autocomplete="name"></div>
+          <div class="f-cell" style="margin-top:12px"><label>Номер телефона</label><input type="tel" id="inPhone" placeholder="+7 (900) 000-00-00" autocomplete="tel"></div>
+          <div class="tile-cta"><button class="btn btn-primary" onclick="register()">Записаться</button></div>
+          <div id="formMsg"></div>
+        </div>
+        <div id="signDone" style="display:none">
+          <div class="done-box">
+            <div class="done-ico">✅</div>
+            <div class="done-title">Вы записаны!</div>
+            <div class="done-sub">Ваши данные сохранены. Мы свяжемся с вами перед игрой.</div>
+            <div class="tile-cta"><button class="btn btn-ghost" onclick="resetForm()">Записать другого</button></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="t-tile">
+        <div class="row-title" style="font-size:14px">📍 Место встречи</div>
+        <div id="gameInfo" class="info-text">Спортивная игра по турнирным правилам. Время и место уточняются в клубе.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tab-view" id="view-players" style="display:none">
+    <div class="hdr">
+      <div class="crest">👥</div>
+      <div class="hdr-info">
+        <div class="hdr-name">Участники</div>
+        <div class="hdr-sub"><b id="plCount">0</b>&nbsp;чел.</div>
+      </div>
+    </div>
+    <div class="content">
+      <div id="playersList" class="players-list"></div>
+    </div>
+  </div>
+
+  <div class="tab-view" id="view-info" style="display:none">
+    <div class="hdr">
+      <div class="crest">ℹ️</div>
+      <div class="hdr-info">
+        <div class="hdr-name">Инфо</div>
+        <div class="hdr-sub">правила и условия</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="t-tile">
+        <div class="rule-item"><div class="rule-ic">♠️</div><div><b>Спорт покер</b><div class="rule-sub" id="infoRules">Игра по турнирным правилам спортивного покера. Игроки записываются заранее по имени и номеру телефона.</div></div></div>
+      </div>
+      <div class="t-tile">
+        <div class="rule-item"><div class="rule-ic">📞</div><div><b>Связь с клубом</b><div class="rule-sub" id="infoContact">—</div></div></div>
+      </div>
+      <div class="t-tile">
+        <div class="sec-title" style="margin:0 0 10px">Управление</div>
+        <div class="f-cell"><label>Пин-код</label><input type="password" id="inPin" placeholder="••••"></div>
+        <div class="tile-cta"><button class="btn btn-primary" onclick="unlockManage()">Открыть</button></div>
+        <div id="manageBox" style="display:none;margin-top:14px">
+          <div class="tile-cta" style="margin-top:0"><button class="btn btn-danger" onclick="openRegistration()">Запись открыта</button></div>
+          <div class="tile-cta"><button class="btn btn-danger" onclick="closeRegistration()">Запись закрыта</button></div>
+          <div class="tile-cta"><button class="btn btn-danger" onclick="clearPlayers()">Очистить список</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="tabbar" id="tabbar">
+    <button class="on" data-tab="0" onclick="goTab(0)"><span class="ic">♠️</span>Запись</button>
+    <button data-tab="1" onclick="goTab(1)"><span class="ic">👥</span>Игроки</button>
+    <button data-tab="2" onclick="goTab(2)"><span class="ic">ℹ️</span>Инфо</button>
+  </nav>
+
+</div>
+<script src="app.js"></script>
+</body>
+</html>
