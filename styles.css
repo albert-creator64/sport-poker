@@ -166,3 +166,13 @@ body:before{content:"";position:fixed;top:0;right:0;bottom:0;left:0;z-index:0;po
 .ok{color:var(--green)}
 .bad{color:var(--red)}
 .is-me{outline:1px solid rgba(var(--accent-rgb),.4);outline-offset:-1px}
+
+#rMsg{margin-top:12px;font-size:13px;line-height:1.4;color:var(--muted)}
+#rMsg.err{color:var(--red)}
+#rMsg.ok{color:var(--green)}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:100;background:rgba(5,7,9,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:flex-end;justify-content:center}
+.modal-box{width:100%;max-width:560px;max-height:88dvh;overflow:auto;background:linear-gradient(180deg,#161c22,#0e1216);border:1px solid var(--border);border-radius:20px 20px 0 0;padding:20px 18px calc(18px + env(safe-area-inset-bottom))}
+.modal-title{font-size:17px;font-weight:800;letter-spacing:-.01em;margin-bottom:14px}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--muted-2);font-size:22px;cursor:pointer}
