@@ -68,6 +68,22 @@
     </div>
   </div>
 
+  <div class="tab-view" id="view-rating" style="display:none">
+    <div class="hdr">
+      <div class="crest">🏆</div>
+      <div class="hdr-info">
+        <div class="hdr-name">Рейтинг</div>
+        <div class="hdr-sub">турнирная таблица</div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="sec-title">Очки за место<span class="hint">(участники − место + 1) / участники × 100</span></div>
+      <div id="ratingTable"></div>
+      <div class="sec-title">Турниры</div>
+      <div id="tournamentList"></div>
+    </div>
+  </div>
+
   <div class="tab-view" id="view-info" style="display:none">
     <div class="hdr">
       <div class="crest">ℹ️</div>
@@ -83,14 +99,23 @@
       <div class="t-tile">
         <div class="rule-item"><div class="rule-ic">📞</div><div><b>Связь с клубом</b><div class="rule-sub" id="infoContact">—</div></div></div>
       </div>
-      <div class="t-tile">
+
+      <div class="t-tile is-live">
         <div class="sec-title" style="margin:0 0 10px">Управление</div>
         <div class="f-cell"><label>Пин-код</label><input type="password" id="inPin" placeholder="••••"></div>
-        <div class="tile-cta"><button class="btn btn-primary" onclick="unlockManage()">Открыть</button></div>
-        <div id="manageBox" style="display:none;margin-top:14px">
-          <div class="tile-cta" style="margin-top:0"><button class="btn btn-danger" onclick="openRegistration()">Запись открыта</button></div>
-          <div class="tile-cta"><button class="btn btn-danger" onclick="closeRegistration()">Запись закрыта</button></div>
+        <div class="tile-cta"><button class="btn btn-primary" onclick="unlockManage()">Войти</button></div>
+
+        <div id="manageBox" style="display:none;margin-top:16px">
+          <div class="tile-cta" style="margin-top:0"><button class="btn btn-ghost" onclick="openRegistration()">Открыть запись</button></div>
+          <div class="tile-cta"><button class="btn btn-ghost" onclick="closeRegistration()">Закрыть запись</button></div>
           <div class="tile-cta"><button class="btn btn-danger" onclick="clearPlayers()">Очистить список</button></div>
+
+          <div class="admin-sep">Добавить турнир</div>
+          <div class="f-cell"><label>Название турнира</label><input type="text" id="inTName" placeholder="Турнир 21.09"></div>
+          <div class="f-cell" style="margin-top:10px"><label>1 место</label><select id="inP1"></select></div>
+          <div class="f-cell" style="margin-top:10px"><label>2 место</label><select id="inP2"></select></div>
+          <div class="f-cell" style="margin-top:10px"><label>3 место</label><select id="inP3"></select></div>
+          <div class="tile-cta"><button class="btn btn-primary" onclick="addTournament()">Добавить результат</button></div>
         </div>
       </div>
     </div>
@@ -99,7 +124,8 @@
   <nav class="tabbar" id="tabbar">
     <button class="on" data-tab="0" onclick="goTab(0)"><span class="ic">♠️</span>Запись</button>
     <button data-tab="1" onclick="goTab(1)"><span class="ic">👥</span>Игроки</button>
-    <button data-tab="2" onclick="goTab(2)"><span class="ic">ℹ️</span>Инфо</button>
+    <button data-tab="2" onclick="goTab(2)"><span class="ic">🏆</span>Рейтинг</button>
+    <button data-tab="3" onclick="goTab(3)"><span class="ic">ℹ️</span>Инфо</button>
   </nav>
 
 </div>
